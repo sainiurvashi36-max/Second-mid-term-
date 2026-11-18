@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Form Validation</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 30px; }
+  .card { max-width: 400px; margin: 0 auto; background: #fff; padding: 24px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+  h1 { text-align: center; font-size: 22px; margin-top: 0; }
+  label { display: block; margin-top: 14px; font-weight: bold; }
+  input { width: 100%; padding: 9px; font-size: 14px; box-sizing: border-box; border: 1px solid #888; border-radius: 3px; margin-top: 5px; }
+  .error { color: red; font-size: 13px; min-height: 16px; margin-top: 3px; }
+  button { width: 100%; margin-top: 20px; padding: 11px; font-size: 16px; background: #333; color: #fff; border: none; border-radius: 3px; cursor: pointer; }
+  #success { color: green; font-weight: bold; margin-top: 14px; text-align: center; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Create Account</h1>
+    <form id="regForm">
+      <label for="name">Full name</label>
+      <input type="text" id="name">
+      <div class="error" id="nameErr"></div>
+
+      <label for="email">Email</label>
+      <input type="text" id="email">
+      <div class="error" id="emailErr"></div>
+
+      <label for="password">Password</label>
+      <input type="password" id="password">
+      <div class="error" id="passErr"></div>
+
+      <label for="confirm">Confirm password</label>
+      <input type="password" id="confirm">
+      <div class="error" id="confirmErr"></div>
+
+      <button type="submit">Register</button>
+    </form>
+    <div id="success"></div>
+  </div>
+
+<script>
+  document.getElementById("regForm").addEventListener("submit", function (event) {
+    event.preventDefault();   // page reload nahi hoga
+
+    var name = document.getElementById("name").value.trim();
+    var email = document.getElementById("email").value.trim();
+    var password = document.getElementById("password").value;
+    var confirm = document.getElementById("confirm").value;
+
+    var nameErr = document.getElementById("nameErr");
+    var emailErr = document.getElementById("emailErr");
+    var passErr = document.getElementById("passErr");
+    var confirmErr = document.getElementById("confirmErr");
+    var success = document.getElementById("success");
+
+    nameErr.textContent = "";
+    emailErr.textContent = "";
+    passErr.textContent = "";
+    confirmErr.textContent = "";
+    success.textContent = "";
+
+    var valid = true;
+
+    if (name.length < 3) {
+      nameErr.textContent = "Name must be at least 3 characters.";
+      valid = false;
+    }
+
+    // simple pattern: something@something.something
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      emailErr.textContent = "Enter a valid email, e.g. name@example.com";
+      valid = false;
+    }
+
+    if (password.length < 6 || !/\d/.test(password)) {
+      passErr.textContent = "Use 6+ characters including a number.";
+      valid = false;
+    }
+
+    if (confirm !== password || confirm === "") {
+      confirmErr.textContent = "Passwords do not match.";
+      valid = false;
+    }
+
+    if (valid) {
+      success.textContent = "Registration successful! Welcome, " + name + ".";
+    }
+  });
+</script>
+</body>
+</html>

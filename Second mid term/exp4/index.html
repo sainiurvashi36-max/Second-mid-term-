@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Search and Filter</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 30px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  h1 { text-align: center; font-size: 24px; }
+  .controls { display: flex; gap: 12px; }
+  #search { flex: 1; padding: 10px; font-size: 14px; border: 1px solid #555; border-radius: 3px; }
+  #category { padding: 10px; font-size: 14px; border: 1px solid #555; border-radius: 3px; }
+  #count { margin: 12px 0; font-size: 14px; color: #333; }
+  #grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .product { background: #fff; padding: 14px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.15); }
+  .product h3 { margin: 0 0 8px; font-size: 16px; }
+  .tag { display: inline-block; background: #e6e6e6; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-bottom: 8px; }
+  .price { font-weight: bold; margin: 0; }
+  #empty { text-align: center; color: #555; margin-top: 20px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Product Catalogue</h1>
+
+    <div class="controls">
+      <input type="text" id="search" placeholder="Search by name...">
+      <select id="category">
+        <option value="All">All categories</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Stationery">Stationery</option>
+        <option value="Fashion">Fashion</option>
+      </select>
+    </div>
+
+    <div id="count"></div>
+    <div id="grid"></div>
+  </div>
+
+<script>
+  var products = [
+    { name: "Wireless Mouse",     category: "Electronics", price: 799 },
+    { name: "Bluetooth Speaker",  category: "Electronics", price: 1999 },
+    { name: "USB Cable",          category: "Electronics", price: 199 },
+    { name: "Notebook Pack",      category: "Stationery",  price: 249 },
+    { name: "Gel Pen Set",        category: "Stationery",  price: 99 },
+    { name: "Running Shoes",      category: "Fashion",     price: 2499 },
+    { name: "Cotton T-Shirt",     category: "Fashion",     price: 599 },
+    { name: "Backpack",           category: "Fashion",     price: 1299 }
+  ];
+
+  var searchBox = document.getElementById("search");
+  var categoryBox = document.getElementById("category");
+  var grid = document.getElementById("grid");
+  var count = document.getElementById("count");
+
+  function showProducts() {
+    var text = searchBox.value.toLowerCase();
+    var cat = categoryBox.value;
+
+    // search + category dono saath me kaam karte hain
+    var filtered = products.filter(function (p) {
+      var nameMatch = p.name.toLowerCase().includes(text);
+      var catMatch = (cat === "All") || (p.category === cat);
+      return nameMatch && catMatch;
+    });
+
+    if (filtered.length === 0) {
+      count.textContent = "No products found.";
+      grid.innerHTML = "";
+      return;
+    }
+
+    count.textContent = "Showing " + filtered.length + " of " + products.length + " products";
+
+    var html = "";
+    filtered.forEach(function (p) {
+      html +=
+        '<div class="product">' +
+          "<h3>" + p.name + "</h3>" +
+          '<span class="tag">' + p.category + "</span>" +
+          '<p class="price">Rs. ' + p.price + "</p>" +
+        "</div>";
+    });
+    grid.innerHTML = html;
+  }
+
+  searchBox.addEventListener("input", showProducts);
+  categoryBox.addEventListener("change", showProducts);
+
+  showProducts();
+</script>
+</body>
+</html>
